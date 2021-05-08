@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "multiphase_unet"
+version = "0.1.0"
+description = ""
+authors = ["zerebom <ice.choco.pudding.kokoro@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.6.9"
+numpy = "^1.18.5"
+jupyter = "^1.0.0"
+pandas = "^1.0.4"
+matplotlib = "^3.2.1"
+seaborn = "^0.10.1"
+plotly = "^4.8.1"
+tqdm = "4.41"
+pytorch-lightning = "^0.8.0"
+japanize-matplotlib = "^1.1.2"
+fastprogress = "^0.2.3"
+lightgbm = "^2.3.1"
+sklearn = "^0.0"
+hydra-core = "^0.11.3"
+mlflow = "^1.8.0"
+torchcontrib = "^0.0.2"
+pyarrow = "^0.17.1"
+optuna = "^1.5.0"
+autopep8 = "^1.5.3"
+pycodestyle = "^2.6.0"
+jupyterthemes = "^0.20.0"
+opencv-python = "^4.2.0"
+albumentations = "^0.4.5"
+numba = "^0.50.0"
+torchvision = "^0.6.0"
+setuptools = "^47.3.1"
+SimpleITK = "^1.2.4"
+tensorflow = "^2.0.0"
+
+[tool.poetry.dev-dependencies]
+pylint = "<2.0.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
