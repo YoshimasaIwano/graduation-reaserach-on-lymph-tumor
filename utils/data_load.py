@@ -162,7 +162,7 @@ class TumorDataset(Dataset):
                 
 def train_dataloader(version):
     """
-    train のdataloader
+    train dataloader
     """
     phase = 'train'
     batch_size = 32
@@ -182,7 +182,7 @@ def train_dataloader(version):
 
 def val_dataloader(version):
     """
-    val のdataloader
+    val dataloader
     """
     phase = 'val'
     batch_size = 32
