@@ -50,8 +50,6 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
                         df_lb.append(0)
                     elif l == 't':
                         df_lb.append(1)
-                    # elif l == 'c':
-                    #     df_lb.append(2)
 
                 df_lbs = torch.from_numpy(np.asarray(df_lb))    # transform numpy to torch
 
@@ -143,7 +141,6 @@ def evaluate_model(model, dataloader):
     pred_nums = []
     lb_nums = []
     pred_scores = []
-    # wrong_id = []
     with torch.no_grad():
         for p_id in p_ids:
             path_list = sorted(glob.glob(f'./data/tumor_-150_150/{p_id}/*.npy'))
@@ -165,8 +162,6 @@ def evaluate_model(model, dataloader):
                         df_lb.append(0)
                     elif l == 't':
                         df_lb.append(1)
-                    # elif l == 'c':
-                    #     df_lb.append(2)
 
                 # transform label into tensor and send it to device(gpu)
                 df_lbs = torch.from_numpy(np.asarray(df_lb))
@@ -176,12 +171,6 @@ def evaluate_model(model, dataloader):
 
                 # outputs is probability after softmax
                 outputs = model(inputs, clinical_data)
-                # print(outputs)
-
-                # in majority decision, deicide 0 or 1 on each image
-                # _, preds = torch.max(outputs, 1)
-                # summarize (0, 1) on ROI
-                # pred_lists = torch.cat([pred_lists, preds.view(-1).cpu()])
 
                 # log function
                 outputs_l = torch.log(outputs)
@@ -195,28 +184,15 @@ def evaluate_model(model, dataloader):
 
             # sum of log
             pred_list_sum = torch.sum(pred_lists, 0, keepdim = True)
-            # decide 0 or 1 based on the bigger log value
             _, pred_num = torch.max(pred_list_sum, 1)
             
-            # mode in patient (majority decision)   
-            # pred_num = stats.mode(pred_lists.to('cpu').detach().numpy().copy())
-
             # make label answer
             lb_num = stats.mode(lb_lists.to('cpu').detach().numpy().copy()) 
 
-            # predict probability on ROI (majority dicision)
-            # pred_score = np.count_nonzero(pred_lists.to('cpu').detach().numpy().copy() == 1) / len(pred_lists.to('cpu').detach().numpy().copy()) 
-
-            # TODO: something wrong there
             # predict probability on ROI 
             soft = nn.Softmax(dim =1)
             pred_soft = soft(pred_list_sum)
-            # print(pred_soft[0].numpy())
             pred_score = pred_soft[0].numpy()[1]
-            # print(pred_score)
-
-            # convert value of mode into DataFrame ex) ModeResult(mode=array([0]), count=array([27]))
-            # pred_num = pd.DataFrame(pred_num[1].numpy())
 
             # create DataFrame predict and answer(label)
             pred_num = pd.DataFrame(pred_num.numpy())
@@ -225,10 +201,6 @@ def evaluate_model(model, dataloader):
             # add pred and label on ROI into list 
             pred_nums.extend(pred_num.values)
             lb_nums.extend(lb_num.values)
-
-            # record mistook ROI number
-            # if pred_num.values != lb_num.values:
-            #     wrong_id.append(p_id)
 
             # for ROC curve
             pred_scores.append(pred_score)
@@ -253,9 +225,6 @@ def evaluate_model(model, dataloader):
     # ROI accuracy
     p_acc = 100 * conf_mat.diagonal().sum() / conf_mat.sum()
     print('ROI_accuracy', p_acc)
-
-    # wrong id and feature
-    # print('Wrong cases', wrong_id)
 
     # ROC curve
     global cnt

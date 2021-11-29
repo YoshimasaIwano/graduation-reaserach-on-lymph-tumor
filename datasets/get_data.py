@@ -19,8 +19,6 @@ def get_data():
     pathlist_add = glob.glob(data_dir + '*/DICOMDAT/*.nrrd')    # to add .nrrd file
     pathlist.extend(pathlist_add)
     pathlist = sorted(pathlist)
-    # for i in range(len(pathlist)):
-    #     print(pathlist[i])
     datalist = []
     cnt = 0
     tumor_cnt = 0

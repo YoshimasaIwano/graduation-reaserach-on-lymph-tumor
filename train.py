@@ -20,10 +20,6 @@ def conduct_train():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    # model, criterion, optimizer = model_resnet()
-    # dataloader_dict = dataloaders_dict_1
-    # model_ft = train_model(model, dataloader_dict, criterion, optimizer, num_epochs = 2)
-
     for i in range(3):
         model, criterion, optimizer = model_resnet()
         print('start' + str(i+1))

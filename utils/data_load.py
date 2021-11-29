@@ -41,39 +41,21 @@ def tumor_list(version):
     for i in version:
         paths = sorted(glob.glob(f'./data/tumor_-150_150/{i}/label_*/*.npy'))
         path_list.extend(paths)
-
-    # number of benign or malignant
-    # s_list = [s for s in path_list if 'label_s' in s]
-    # print(len(s_list))
-    # t_list = [s for s in path_list if 'label_t' in s]
-    # print(len(t_list))
-
-    # number of data
-    # print(len(path_list))  
     
     return path_list
 
 class ImageTransform():
     def __init__(self):
         self.data_transform = {
-            'train': transforms.Compose([
-                # transforms.RandomResizedCrop(
-                #     resize, scale=(0.5, 1.0)),  # augmentation
-                # transforms.RandomHorizontalFlip(),  # augmentation
-                
+            'train': transforms.Compose([ 
                 transforms.ToPILImage(),
                 transforms.Grayscale(num_output_channels=1),
-                # transforms.Resize(256),
                 transforms.ToTensor(),  # convert into tensor [0, 1] (regularization)
-                # transforms.Normalize(mean = [0.640], std = [0.255])  # standarlization convert into [-1, 1]
             ]),
-            'val': transforms.Compose([
-                
+            'val': transforms.Compose([                
                 transforms.ToPILImage(),
                 transforms.Grayscale(num_output_channels=1),
-                # transforms.Resize(256),
                 transforms.ToTensor(),  # convert into tensor
-                # transforms.Normalize(mean = [0.640], std = [0.255])  # standarlization
             ])
         }
 
@@ -103,13 +85,6 @@ class TumorDataset(Dataset):
     def __getitem__(self, index):
         path = self.path_list[index]
         tmp_data = np.load(path)
-
-        # iamge size 100×100
-        # if index == 0:
-        #     print(len(tmp_data))
-
-        # min of pixel value
-        # print(tmp_data.min())
 
         # preprocessing
         transformed_data = self.transform(tmp_data, self.phase)
@@ -141,23 +116,8 @@ class TumorDataset(Dataset):
 
         clinical_data = [primary_lesion_s, primary_lesion_e, primary_lesion_ys, primary_lesion_ch, primary_lesion_t, primary_lesion_b, LDH, AFP, HCG, b_lymph, a_lymph]
         
-        # #  to standarlize,  numpy&reshape
-        # clinical_data = np.array(clinical_data)
-        # clinical_data = clinical_data.reshape(-1,1)
-        
-        # # standarlization
-        # scaler = StandardScaler()
-        # clinical_data = scaler.fit_transform(clinical_data)
-
-        # # return tensor
-        # clinical_data = clinical_data.reshape(-1)
         clinical_data = torch.tensor(clinical_data).float()
 
-
-        # image size after transforming
-        # if index == 0:
-        #     print(len(transformed_data[0]))
-        
         return transformed_data, lb, p_id, clinical_data
                 
 def train_dataloader(version):
@@ -174,8 +134,6 @@ def train_dataloader(version):
         path_list = tumor_list(train_num_3)
     
     train_dataset = TumorDataset(path_list, ImageTransform(), phase)
-    # ？
-    # print(train_dataset.__getitem__(0)[0])
     train_dataloader = DataLoader(train_dataset, shuffle = True, batch_size = batch_size)
     
     return train_dataloader

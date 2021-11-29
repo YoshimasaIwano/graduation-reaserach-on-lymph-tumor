@@ -119,7 +119,7 @@ class Bottleneck(nn.Module):
         self.stride = stride
 
     def forward(self, x: Tensor) -> Tensor:
-        identity = x           #スキップするために保存する 
+        identity = x           
 
         out = self.conv1(x)
         out = self.bn1(out)
@@ -135,7 +135,7 @@ class Bottleneck(nn.Module):
         if self.downsample is not None:
             identity = self.downsample(x)
 
-        out += identity        #スキップして結合
+        out += identity        
         out = self.relu(out)
         
 
@@ -184,7 +184,6 @@ class ResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
                                        dilate=replace_stride_with_dilation[2])                               
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))   
-        # self.drop = nn.Dropout(0.3)
         self.linear_out = 50          # output of clinical data net             
         self.fc = nn.Linear(512 * block.expansion + self.linear_out, num_classes)
         self.softmax = nn.Softmax(dim=1)
@@ -248,7 +247,6 @@ class ResNet(nn.Module):
         x = self.layer4(x)
 
         x = self.avgpool(x)
-        # x = self.drop(x)
         x = torch.flatten(x, 1)
 
         clinic = self.linear(clinic)

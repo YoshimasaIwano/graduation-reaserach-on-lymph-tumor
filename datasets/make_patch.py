@@ -15,13 +15,6 @@ def extract_tumor(im, lb):
     row_lng = max_row - min_row
     col_lng = max_col - min_col
 
-    # TODO: how to deal with or resize the larger ones
-    # if row_lng > 100 or col_lng > 100:
-    #     im_tmp = im[min_row: max_row, min_col: max_col]
-    #     im_tmp = Image.fromarray(np.uint8(im_tmp))
-    #     im_tumor = np.asarray(im_tmp.resize((100,100), Image.LANCZOS))
-    # else:
-
     # the center of a tumor
     cen_row = int((max_row + min_row) / 2)
     cen_col = int((max_col + min_col) / 2)
